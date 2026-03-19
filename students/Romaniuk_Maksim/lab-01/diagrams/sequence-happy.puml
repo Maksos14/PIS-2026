@@ -1,0 +1,94 @@
+@startuml
+title Use-case: Добавление отклика на вакансию (Happy Path)
+
+actor "Соискатель" as Applicant
+participant "Web UI" as UI
+participant "Job Tracker API" as API
+participant "Company Service" as CompanySvc
+participant "Stage Service" as StageSvc
+participant "Reminder Service" as ReminderSvc
+database "PostgreSQL" as DB
+
+== Начало сценария ==
+
+Applicant -> UI: Выбрать "Добавить отклик"
+UI --> Applicant: Отобразить форму создания отклика
+
+Applicant -> UI: Заполнить данные:\n- Название вакансии\n- Компания (из справочника)\n- Дата (текущая)\n- Способ отклика\n- Ссылка (опционально)\n- Сопроводительное письмо (опционально)
+note right
+  Все обязательные поля заполнены
+end note
+
+Applicant -> UI: Нажать "Сохранить"
+UI -> API: POST /api/responses\n{vacancy_title, company_id, date, source, link, cover_letter}
+activate API
+
+note over API #FFAAAA
+  Начало транзакции
+end note
+
+API -> DB: BEGIN TRANSACTION
+activate DB
+
+API -> DB: INSERT INTO job_responses\n(id, user_id, vacancy_title, company_id, response_date, source, link, cover_letter, status)
+note right
+  status = 'ACTIVE'
+end note
+DB --> API: response_id = 'R-2024-0142'
+
+== Создание первого этапа ==
+
+API -> StageSvc: createInitialStage(response_id='R-2024-0142')
+activate StageSvc
+
+StageSvc -> DB: SELECT default_stage_config FROM user_settings\nWHERE user_id = ?
+DB --> StageSvc: default_config
+
+StageSvc -> DB: INSERT INTO response_stages\n(id, response_id, stage_name, stage_order, created_at, status)
+note right
+  stage_name = 'Отклик отправлен'\nstage_order = 1\nstatus = 'COMPLETED'
+end note
+DB --> StageSvc: OK
+
+StageSvc --> API: stage_created = true
+deactivate StageSvc
+
+== Настройка напоминания (опционально) ==
+
+API -> ReminderSvc: scheduleReminder(response_id='R-2024-0142', days=7)
+activate ReminderSvc
+
+ReminderSvc -> DB: INSERT INTO reminders\n(id, response_id, reminder_date, reminder_type, status)
+note right
+  reminder_date = NOW() + 7 days\nreminder_type = 'STATUS_CHECK'\nstatus = 'PENDING'
+end note
+DB --> ReminderSvc: reminder_id = 'REM-123'
+
+ReminderSvc --> API: reminder_scheduled = true
+deactivate ReminderSvc
+
+== Обновление статистики ==
+
+API -> DB: UPDATE user_statistics\nSET active_responses = active_responses + 1\nWHERE user_id = ?
+DB --> API: OK
+
+API -> DB: COMMIT TRANSACTION
+
+note over API #AAFFAA
+  Транзакция успешно завершена
+end note
+
+deactivate DB
+
+API --> UI: 201 Created\n{response_id: "R-2024-0142", status: "ACTIVE"}
+deactivate API
+
+UI -> UI: Обновить список откликов
+UI --> Applicant: Показать сообщение:\n"Отклик успешно добавлен!"
+
+note over Applicant
+  Соискатель видит новый отклик
+  в списке со статусом "Активный"
+end note
+
+@enduml

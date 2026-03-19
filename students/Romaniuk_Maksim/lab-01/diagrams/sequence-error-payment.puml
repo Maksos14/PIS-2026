@@ -1,0 +1,63 @@
+@startuml
+title Use-case: Добавление отклика на вакансию (Ошибка создания этапа)
+
+actor "Соискатель" as Applicant
+participant "Web UI" as UI
+participant "Job Tracker API" as API
+participant "Company Service" as CompanySvc
+participant "Stage Service" as StageSvc
+participant "Reminder Service" as ReminderSvc
+database "PostgreSQL" as DB
+
+== Начало сценария ==
+
+Applicant -> UI: Выбрать "Добавить отклик"
+UI --> Applicant: Отобразить форму создания отклика
+
+Applicant -> UI: Заполнить данные и нажать "Сохранить"
+UI -> API: POST /api/responses
+activate API
+
+note over API #FFAAAA
+  Начало транзакции
+end note
+
+API -> DB: BEGIN TRANSACTION
+activate DB
+
+API -> DB: INSERT INTO job_responses\n(status='ACTIVE')
+DB --> API: response_id = 'R-2024-0142'
+
+API -> StageSvc: createInitialStage(response_id)
+activate StageSvc
+
+note over StageSvc #FFAAAA
+  КРИТИЧЕСКАЯ ОШИБКА:
+  Воронка этапов не настроена
+  для данного пользователя
+end note
+
+StageSvc --> API: ERROR: stage_creation_failed
+deactivate StageSvc
+
+note over API #FF8888
+  Обнаружена ошибка создания этапа
+  Инициируется откат транзакции
+end note
+
+API -> DB: ROLLBACK TRANSACTION
+DB --> API: transaction_rolled_back
+deactivate DB
+
+API --> UI: 500 Internal Server Error\n{error: "stage_creation_failed",\nmessage: "Не удалось создать этап отклика"}
+deactivate API
+
+UI --> Applicant: Показать сообщение об ошибке:\n"Не удалось добавить отклик.\nПопробуйте позже или обратитесь в поддержку"
+
+note over Applicant
+  Отклик НЕ создан
+  Данные НЕ сохранены
+  Пользователь видит ошибку
+end note
+
+@enduml
