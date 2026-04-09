@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>&TScy;&iecy;&lcy;&softcy; &rcy;&acy;&bcy;&ocy;&tcy;&ycy;</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <p align="center">Министерство образования Республики Беларусь</p>
+<p align="center">Учреждение образования</p>
+<p align="center">"Брестский Государственный технический университет"</p>
+<p align="center">Кафедра ИИТ</p>
+<br><br><br><br><br><br>
+<p align="center"><strong>Лабораторная работа №2</strong></p>
+<p align="center"><strong>По дисциплине:</strong> "Проектирование интернет-систем"</p>
+<p align="center"><strong>Тема:</strong> "Гексагональная архитектура: проектирование портов и адаптеров"</p>
+<br><br><br><br><br><br>
+<p align="right"><strong>Выполнил:</strong></p>
+<p align="right">Студент 3 курса</p>
+<p align="right">Группы ПО-13</p>
+<p align="right">Романюк М.А.</p>
+<p align="right"><strong>Проверил:</strong></p>
+<p align="right">Несюк А.Н.</p>
+<br><br><br><br><br>
+<p align="center"><strong>Брест 2026</strong></p>
+<hr>
+<h2 id="цель-работы">Цель работы</h2>
+<p>Спроектировать архитектуру основного сервиса системы с использованием гексагональной (hexagonal) архитектуры: создать структуру проекта, определить порты (интерфейсы) и продемонстрировать изоляцию слоёв через минимальные примеры.</p>
+<hr>
+<h2 id="вариант-32--поиск-работы-оффер-где-">Вариант №32 — Поиск работы «Оффер где?» 📮</h2>
+<p><strong>Питч:</strong><br>
+Трекай отклики как профи. Приложение помогает пользователю отслеживать процесс поиска работы: фиксировать отклики на вакансии, управлять этапами отбора, добавлять заметки и получать напоминания о важных событиях.</p>
+<p><strong>Ядро домена:</strong></p>
+<ul>
+<li>JobOffer (отклик на вакансию)</li>
+<li>User (пользователь)</li>
+<li>Project (проект/кампания поиска работы)</li>
+</ul>
+<p><strong>Выбранный сервис:</strong><br>
+<strong>JobOffer Service</strong> — сервис управления откликами на вакансии.</p>
+<hr>
+<h2 id="ход-выполнения-работы">Ход выполнения работы</h2>
+<hr>
+<h1 id="часть-1-архитектурная-диаграмма">Часть 1. Архитектурная диаграмма</h1>
+<h3 id="описание-сервиса">Описание сервиса</h3>
+<p>JobOffer Service выполняет следующие функции:</p>
+<ul>
+<li>создание отклика на вакансию;</li>
+<li>получение информации об отклике по ID;</li>
+<li>изменение этапа отбора;</li>
+<li>добавление заметок к отклику;</li>
+<li>планирование напоминаний;</li>
+<li>группировка откликов по проектам.</li>
+</ul>
+<p>Основные сущности:</p>
+<ul>
+<li>JobOffer — агрегат отклика на вакансию</li>
+<li>User — пользователь системы</li>
+<li>Project — проект/кампания поиска работы</li>
+</ul>
+<h3 id="диаграмма-слоёв">Диаграмма слоёв</h3>
+<p>┌──────────────────────────────────────────────────────────┐
+│ Infrastructure Layer │
+│ │
+│ ┌────────────────┐ ┌──────────────────────────┐ │
+│ │ REST API │ │ InMemoryJobOfferRepo │ │
+│ │JobOfferController│ │ (JobOfferRepository impl.)│ │
+│ └───────┬────────┘ └───────────────┬──────────┘ │
+│ │ │ │
+│ ┌───────▼────────┐ ┌────────────────▼──────────┐ │
+│ │ REST API │ │ ConsoleNotificationService │ │
+│ │ReminderController│ │ (NotificationService impl.)│ │
+│ └───────┬────────┘ └───────────────┬──────────┘ │
+│ │ │ │
+└───────────┼─────────────────────────────────┼──────────────┘
+│ │
+▼ ▼
+┌──────────────────────────────────────────────────────────┐
+│ Application Layer │
+│ │
+│ ┌────────────────┐ ┌──────────────────────────┐ │
+│ │ In Ports │ │ Out Ports │ │
+│ │ (Use Cases) │ │ (Dependencies) │ │
+│ │ CreateOfferUC │ │ JobOfferRepository │ │
+│ │ GetOfferUC │ │ NotificationService │ │
+│ └───────┬────────┘ └───────────────┬──────────┘ │
+│ │ │ │
+│ ┌───────▼─────────────────────────────────▼───────────┐ │
+│ │ JobOfferService (Orchestrator) │ │
+│ └──────────────────────────────────────────────────────┘ │
+└───────────────────────────┬────────────────────────────────┘
+│
+▼
+┌──────────────────────────────────────────────────────────┐
+│ Domain Layer │
+│ │
+│ ┌──────────────┐ ┌────────────────┐ ┌────────────┐ │
+│ │ JobOffer │ │ User │ │ Project │ │
+│ │ (Aggregate) │ │ (Entity) │ │ (Entity) │ │
+│ └──────────────┘ └────────────────┘ └────────────┘ │
+│ │
+│ ┌──────────────┐ ┌────────────────┐ │
+│ │ OfferStatus │ │ StageType │ │
+│ │ (Value Obj) │ │ (Value Obj) │ │
+│ └──────────────┘ └────────────────┘ │
+└──────────────────────────────────────────────────────────┘</p>
+<p>text</p>
+<hr>
+<h1 id="часть-2-структура-проекта-скелет">Часть 2. Структура проекта (скелет)</h1>
+<p>Технология: <strong>Python</strong></p>
+<p><strong>Структура папок:</strong>
+joboffer-service/
+├── <a href="http://README.html">README.md</a>
+├── <a href="http://Architecture.html">Architecture.md</a>
+├── src/
+│ ├── domain/
+│ │ ├── models/
+│ │ │ ├── job_offer.py
+│ │ │ ├── <a href="http://user.py">user.py</a>
+│ │ │ └── <a href="http://project.py">project.py</a>
+│ │ └── exceptions/
+│ │ └── domain_exception.py
+│ ├── application/
+│ │ ├── port/
+│ │ │ ├── in/
+│ │ │ │ ├── create_job_offer_use_case.py
+│ │ │ │ └── get_job_offer_use_case.py
+│ │ │ └── out/
+│ │ │ ├── job_offer_repository.py
+│ │ │ └── notification_service.py
+│ │ └── service/
+│ │ └── job_offer_service.py
+│ └── infrastructure/
+│ ├── adapter/
+│ │ ├── in/
+│ │ │ └── job_offer_controller.py
+│ │ └── out/
+│ │ ├── in_memory_job_offer_repository.py
+│ │ └── console_notification_service.py
+│ └── config/
+│ └── dependency_injection.py</p>
+<p>text</p>
+<hr>
+<h1 id="часть-3-domain-layer">Часть 3. Domain Layer</h1>
+<h2 id="joboffer">JobOffer</h2>
+<pre><code class="language-python"><span class="hljs-keyword">from</span> datetime <span class="hljs-keyword">import</span> datetime
+<span class="hljs-keyword">from</span> enum <span class="hljs-keyword">import</span> Enum
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">OfferStatus</span>(<span class="hljs-built_in">str</span>, Enum):
+    ACTIVE = <span class="hljs-string">&quot;active&quot;</span>
+    REJECTED = <span class="hljs-string">&quot;rejected&quot;</span>
+    OFFER_RECEIVED = <span class="hljs-string">&quot;offer_received&quot;</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">StageType</span>(<span class="hljs-built_in">str</span>, Enum):
+    RESUME_SENT = <span class="hljs-string">&quot;resume_sent&quot;</span>
+    INTERVIEW = <span class="hljs-string">&quot;interview&quot;</span>
+    TEST_TASK = <span class="hljs-string">&quot;test_task&quot;</span>
+    OFFER = <span class="hljs-string">&quot;offer&quot;</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">JobOffer</span>:
+    <span class="hljs-string">&quot;&quot;&quot;Доменная модель: Отклик на вакансию&quot;&quot;&quot;</span>
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, offer_id: <span class="hljs-built_in">str</span>, company: <span class="hljs-built_in">str</span>, position: <span class="hljs-built_in">str</span>, user_id: <span class="hljs-built_in">str</span></span>):
+        self.<span class="hljs-built_in">id</span> = offer_id
+        self.company = company
+        self.position = position
+        self.user_id = user_id
+        self.status = OfferStatus.ACTIVE
+        self.current_stage = StageType.RESUME_SENT
+        self.created_at = datetime.now()
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">change_stage</span>(<span class="hljs-params">self, new_stage: StageType</span>):
+        <span class="hljs-string">&quot;&quot;&quot;Перевести отклик на новый этап&quot;&quot;&quot;</span>
+        self.current_stage = new_stage
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">mark_rejected</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-string">&quot;&quot;&quot;Отметить отклик как отклонённый&quot;&quot;&quot;</span>
+        self.status = OfferStatus.REJECTED
+User
+python
+<span class="hljs-keyword">from</span> datetime <span class="hljs-keyword">import</span> datetime
+<span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span>
+<span class="hljs-keyword">from</span> enum <span class="hljs-keyword">import</span> Enum
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">UserRole</span>(<span class="hljs-built_in">str</span>, Enum):
+    JOB_SEEKER = <span class="hljs-string">&quot;job_seeker&quot;</span>
+    RECRUITER = <span class="hljs-string">&quot;recruiter&quot;</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">User</span>:
+    <span class="hljs-string">&quot;&quot;&quot;Доменная модель: Пользователь системы&quot;&quot;&quot;</span>
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, user_id: <span class="hljs-built_in">str</span>, email: <span class="hljs-built_in">str</span>, full_name: <span class="hljs-built_in">str</span></span>):
+        self.<span class="hljs-built_in">id</span> = user_id
+        self.email = email
+        self.full_name = full_name
+        self.role = UserRole.JOB_SEEKER
+        self.is_active = <span class="hljs-literal">True</span>
+        self.created_at = datetime.now()
+        self.job_offer_ids: <span class="hljs-type">List</span>[<span class="hljs-built_in">str</span>] = []
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">deactivate</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-string">&quot;&quot;&quot;Деактивировать пользователя&quot;&quot;&quot;</span>
+        self.is_active = <span class="hljs-literal">False</span>
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">add_job_offer</span>(<span class="hljs-params">self, offer_id: <span class="hljs-built_in">str</span></span>):
+        <span class="hljs-string">&quot;&quot;&quot;Привязать отклик к пользователю&quot;&quot;&quot;</span>
+        self.job_offer_ids.append(offer_id)
+Project
+python
+<span class="hljs-keyword">from</span> datetime <span class="hljs-keyword">import</span> datetime
+<span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span>
+<span class="hljs-keyword">from</span> enum <span class="hljs-keyword">import</span> Enum
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">ProjectStatus</span>(<span class="hljs-built_in">str</span>, Enum):
+    ACTIVE = <span class="hljs-string">&quot;active&quot;</span>
+    PAUSED = <span class="hljs-string">&quot;paused&quot;</span>
+    COMPLETED = <span class="hljs-string">&quot;completed&quot;</span>
+    ARCHIVED = <span class="hljs-string">&quot;archived&quot;</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Project</span>:
+    <span class="hljs-string">&quot;&quot;&quot;Доменная модель: Проект/кампания поиска работы&quot;&quot;&quot;</span>
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, project_id: <span class="hljs-built_in">str</span>, name: <span class="hljs-built_in">str</span>, user_id: <span class="hljs-built_in">str</span>, description: <span class="hljs-built_in">str</span> = <span class="hljs-string">&quot;&quot;</span></span>):
+        self.<span class="hljs-built_in">id</span> = project_id
+        self.name = name
+        self.description = description
+        self.user_id = user_id
+        self.status = ProjectStatus.ACTIVE
+        self.job_offer_ids: <span class="hljs-type">List</span>[<span class="hljs-built_in">str</span>] = []
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">add_job_offer</span>(<span class="hljs-params">self, offer_id: <span class="hljs-built_in">str</span></span>):
+        <span class="hljs-string">&quot;&quot;&quot;Добавить отклик в проект&quot;&quot;&quot;</span>
+        self.job_offer_ids.append(offer_id)
+        self.updated_at = datetime.now()
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">pause</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-string">&quot;&quot;&quot;Приостановить проект&quot;&quot;&quot;</span>
+        self.status = ProjectStatus.PAUSED
+        self.updated_at = datetime.now()
+Доменные исключения
+python
+<span class="hljs-comment"># domain/exceptions/domain_exception.py</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">DomainException</span>(<span class="hljs-title class_ inherited__">Exception</span>):
+    <span class="hljs-string">&quot;&quot;&quot;Базовое исключение для доменных ошибок&quot;&quot;&quot;</span>
+    <span class="hljs-keyword">pass</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">InvalidStageTransitionException</span>(<span class="hljs-title class_ inherited__">DomainException</span>):
+    <span class="hljs-string">&quot;&quot;&quot;Некорректный переход между этапами&quot;&quot;&quot;</span>
+    <span class="hljs-keyword">pass</span>
+Бизнес-правила
+Перечислите основные бизнес-правила, реализованные в domain слое:
+
+Нельзя перейти на предыдущий этап отбора
+
+При изменении этапа генерируется событие (будет в ЛР-<span class="hljs-number">3</span>)
+
+Нельзя добавить заметку без текста (будет в ЛР-<span class="hljs-number">3</span>)
+
+Напоминание можно запланировать только на будущее (будет в ЛР-<span class="hljs-number">3</span>)
+
+Если статус REJECTED → все напоминания отменяются (будет в ЛР-<span class="hljs-number">3</span>)
+
+Отклик принадлежит одному конкретному пользователю
+
+Проект может содержать несколько откликов
+
+<span class="hljs-comment">### Часть 4. Application Layer (Прикладной слой)</span>
+
+<span class="hljs-comment">#### Входящие порты (Inbound Ports)</span>
+
+CreateJobOfferUseCase
+python
+<span class="hljs-keyword">from</span> abc <span class="hljs-keyword">import</span> ABC, abstractmethod
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">CreateJobOfferCommand</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, company: <span class="hljs-built_in">str</span>, position: <span class="hljs-built_in">str</span>, user_id: <span class="hljs-built_in">str</span></span>):
+        self.company = company
+        self.position = position
+        self.user_id = user_id
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">CreateJobOfferUseCase</span>(<span class="hljs-title class_ inherited__">ABC</span>):
+<span class="hljs-meta">    @abstractmethod</span>
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">create_offer</span>(<span class="hljs-params">self, command: CreateJobOfferCommand</span>) -&gt; <span class="hljs-built_in">str</span>:
+        <span class="hljs-keyword">pass</span>
+GetJobOfferUseCase
+python
+<span class="hljs-keyword">from</span> abc <span class="hljs-keyword">import</span> ABC, abstractmethod
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">GetJobOfferUseCase</span>(<span class="hljs-title class_ inherited__">ABC</span>):
+<span class="hljs-meta">    @abstractmethod</span>
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_offer</span>(<span class="hljs-params">self, offer_id: <span class="hljs-built_in">str</span></span>):
+        <span class="hljs-keyword">pass</span>
+Исходящие порты (Outbound Ports)
+JobOfferRepository
+python
+<span class="hljs-keyword">from</span> abc <span class="hljs-keyword">import</span> ABC, abstractmethod
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">JobOfferRepository</span>(<span class="hljs-title class_ inherited__">ABC</span>):
+<span class="hljs-meta">    @abstractmethod</span>
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">save</span>(<span class="hljs-params">self, job_offer</span>) -&gt; <span class="hljs-literal">None</span>:
+        <span class="hljs-keyword">pass</span>
+
+<span class="hljs-meta">    @abstractmethod</span>
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">find_by_id</span>(<span class="hljs-params">self, offer_id: <span class="hljs-built_in">str</span></span>):
+        <span class="hljs-keyword">pass</span>
+NotificationService
+python
+<span class="hljs-keyword">from</span> abc <span class="hljs-keyword">import</span> ABC, abstractmethod
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">NotificationService</span>(<span class="hljs-title class_ inherited__">ABC</span>):
+<span class="hljs-meta">    @abstractmethod</span>
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">send_stage_changed</span>(<span class="hljs-params">self, offer_id: <span class="hljs-built_in">str</span>, user_email: <span class="hljs-built_in">str</span>, new_stage: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-literal">None</span>:
+        <span class="hljs-keyword">pass</span>
+JobOfferService
+python
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">JobOfferService</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, repository, notification_service</span>):
+        self.repository = repository
+        self.notification_service = notification_service
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">create_offer</span>(<span class="hljs-params">self, command</span>):
+        <span class="hljs-keyword">raise</span> NotImplementedError(<span class="hljs-string">&quot;Будет реализовано в Lab #4&quot;</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_offer</span>(<span class="hljs-params">self, offer_id: <span class="hljs-built_in">str</span></span>):
+        <span class="hljs-keyword">raise</span> NotImplementedError(<span class="hljs-string">&quot;Будет реализовано в Lab #4&quot;</span>)
+Основная логика
+Получает команду создания отклика (CreateJobOfferCommand)
+
+Проверяет корректность данных (будет реализовано позже)
+
+Создаёт доменную запись (JobOffer)
+
+Сохраняет её через исходящий порт JobOfferRepository
+
+При необходимости вызывает NotificationService
+
+Возвращает ID созданного отклика
+
+<span class="hljs-comment"># Часть 5. Infrastructure Layer (Инфраструктурный слой)</span>
+
+Входящий адаптер: REST API
+JobOfferController:
+
+python
+<span class="hljs-comment"># job_offer_controller.py</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">JobOfferController</span>:
+    <span class="hljs-string">&quot;&quot;&quot;
+    REST-контроллер для работы с откликами на вакансии.
+    &quot;&quot;&quot;</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, job_offer_service</span>):
+        self.job_offer_service = job_offer_service
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">create_offer</span>(<span class="hljs-params">self, request</span>):
+        <span class="hljs-string">&quot;&quot;&quot;
+        Обрабатывает POST-запрос на создание отклика.
+        &quot;&quot;&quot;</span>
+        command = request.to_command()
+        offer_id = self.job_offer_service.create_offer(command)
+        <span class="hljs-keyword">return</span> {<span class="hljs-string">&quot;offer_id&quot;</span>: offer_id, <span class="hljs-string">&quot;status&quot;</span>: <span class="hljs-string">&quot;created&quot;</span>}
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_offer</span>(<span class="hljs-params">self, offer_id: <span class="hljs-built_in">str</span></span>):
+        <span class="hljs-string">&quot;&quot;&quot;
+        Обрабатывает GET-запрос на получение отклика.
+        &quot;&quot;&quot;</span>
+        offer = self.job_offer_service.get_offer(offer_id)
+        <span class="hljs-keyword">if</span> offer <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:
+            <span class="hljs-keyword">return</span> {<span class="hljs-string">&quot;error&quot;</span>: <span class="hljs-string">&quot;Not found&quot;</span>}, <span class="hljs-number">404</span>
+        <span class="hljs-keyword">return</span> self._format_response(offer)
+Эндпоинты
+Метод	Эндпоинт	Описание
+POST	/api/offers	Создание нового отклика
+GET	/api/offers/{offerId}	Получение информации об отклике
+Пример запроса/ответа:
+
+json
+POST /api/offers
+{
+  <span class="hljs-string">&quot;company&quot;</span>: <span class="hljs-string">&quot;ООО ТехноПарк&quot;</span>,
+  <span class="hljs-string">&quot;position&quot;</span>: <span class="hljs-string">&quot;Python Developer&quot;</span>,
+  <span class="hljs-string">&quot;user_id&quot;</span>: <span class="hljs-string">&quot;user_123&quot;</span>
+}
+
+Ответ:
+{
+  <span class="hljs-string">&quot;offer_id&quot;</span>: <span class="hljs-string">&quot;offer_456&quot;</span>,
+  <span class="hljs-string">&quot;status&quot;</span>: <span class="hljs-string">&quot;created&quot;</span>
+}
+json
+GET /api/offers/offer_456
+
+Ответ:
+{
+  <span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-string">&quot;offer_456&quot;</span>,
+  <span class="hljs-string">&quot;company&quot;</span>: <span class="hljs-string">&quot;ООО ТехноПарк&quot;</span>,
+  <span class="hljs-string">&quot;position&quot;</span>: <span class="hljs-string">&quot;Python Developer&quot;</span>,
+  <span class="hljs-string">&quot;user_id&quot;</span>: <span class="hljs-string">&quot;user_123&quot;</span>,
+  <span class="hljs-string">&quot;status&quot;</span>: <span class="hljs-string">&quot;active&quot;</span>,
+  <span class="hljs-string">&quot;current_stage&quot;</span>: <span class="hljs-string">&quot;resume_sent&quot;</span>,
+  <span class="hljs-string">&quot;created_at&quot;</span>: <span class="hljs-string">&quot;2026-03-20T10:30:00&quot;</span>
+}
+Исходящий адаптер: InMemoryJobOfferRepository
+InMemoryJobOfferRepository
+python
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">InMemoryJobOfferRepository</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        self.offers = {}
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">save</span>(<span class="hljs-params">self, job_offer</span>):
+        self.offers[job_offer.<span class="hljs-built_in">id</span>] = job_offer
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">find_by_id</span>(<span class="hljs-params">self, offer_id: <span class="hljs-built_in">str</span></span>):
+        <span class="hljs-keyword">return</span> self.offers.get(offer_id)
+Исходящий адаптер: ConsoleNotificationService
+ConsoleNotificationService
+python
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">ConsoleNotificationService</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">send_stage_changed</span>(<span class="hljs-params">self, offer_id: <span class="hljs-built_in">str</span>, user_email: <span class="hljs-built_in">str</span>, new_stage: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-literal">None</span>:
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;[NOTIFICATION] Отклик <span class="hljs-subst">{offer_id}</span> перешёл на этап: <span class="hljs-subst">{new_stage}</span>&quot;</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;              Уведомление отправлено на <span class="hljs-subst">{user_email}</span>&quot;</span>)
+Принцип работы
+Данные хранятся в оперативной памяти в виде словаря.
+
+Уведомления выводятся в консоль (заглушка).
+
+В реальной системе этот адаптер будет заменён на PostgreSQL и реальный сервис уведомлений (email/telegram).
+
+<span class="hljs-comment"># Часть 6. Dependency Injection (Конфигурация зависимостей)</span>
+
+DependencyContainer (DI‑контейнер):
+
+python
+<span class="hljs-comment"># dependency_injection.py</span>
+
+<span class="hljs-keyword">from</span> application.service.job_offer_service <span class="hljs-keyword">import</span> JobOfferService
+<span class="hljs-keyword">from</span> infrastructure.adapter.out.in_memory_job_offer_repository <span class="hljs-keyword">import</span> InMemoryJobOfferRepository
+<span class="hljs-keyword">from</span> infrastructure.adapter.out.console_notification_service <span class="hljs-keyword">import</span> ConsoleNotificationService
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">DependencyContainer</span>:
+    <span class="hljs-string">&quot;&quot;&quot;
+    DI-контейнер: связывает входящие и исходящие порты
+    с их реализациями в инфраструктурном слое.
+    &quot;&quot;&quot;</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-comment"># Исходящие адаптеры</span>
+        self.job_offer_repository = InMemoryJobOfferRepository()
+        self.notification_service = ConsoleNotificationService()
+
+        <span class="hljs-comment"># Application Service</span>
+        self.job_offer_service = JobOfferService(
+            repository=self.job_offer_repository,
+            notification_service=self.notification_service
+        )
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">get_job_offer_service</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-keyword">return</span> self.job_offer_service
+Как работает DI:
+
+DI‑контейнер создаёт реализации исходящих портов (JobOfferRepository, NotificationService).
+
+Эти реализации передаются в JobOfferService через конструктор.
+
+Контроллеры и другие входящие адаптеры получают готовый сервис через методы контейнера.
+
+Таким образом, application‑слой не создаёт зависимости сам, а получает их извне, что соответствует принципу Dependency Inversion.
+
+<span class="hljs-comment"># Часть 7. Тестирование</span>
+
+Юнит-тесты для JobOfferService
+python
+<span class="hljs-comment"># test_job_offer_service.py</span>
+<span class="hljs-keyword">import</span> unittest
+<span class="hljs-keyword">from</span> application.service.job_offer_service <span class="hljs-keyword">import</span> JobOfferService
+<span class="hljs-keyword">from</span> infrastructure.adapter.out.in_memory_job_offer_repository <span class="hljs-keyword">import</span> InMemoryJobOfferRepository
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">JobOfferRepositoryMock</span>(<span class="hljs-title class_ inherited__">InMemoryJobOfferRepository</span>):
+    <span class="hljs-keyword">pass</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">NotificationServiceMock</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        self.notifications = []
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">send_stage_changed</span>(<span class="hljs-params">self, offer_id: <span class="hljs-built_in">str</span>, user_email: <span class="hljs-built_in">str</span>, new_stage: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-literal">None</span>:
+        self.notifications.append((offer_id, user_email, new_stage))
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">TestJobOfferService</span>(unittest.TestCase):
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">test_create_offer_not_implemented</span>(<span class="hljs-params">self</span>):
+        repo = JobOfferRepositoryMock()
+        notification = NotificationServiceMock()
+        service = JobOfferService(repo, notification)
+
+        <span class="hljs-keyword">with</span> self.assertRaises(NotImplementedError):
+            service.create_offer(<span class="hljs-literal">None</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">test_get_offer_not_implemented</span>(<span class="hljs-params">self</span>):
+        repo = JobOfferRepositoryMock()
+        notification = NotificationServiceMock()
+        service = JobOfferService(repo, notification)
+
+        <span class="hljs-keyword">with</span> self.assertRaises(NotImplementedError):
+            service.get_offer(<span class="hljs-string">&quot;test_id&quot;</span>)
+Описание портов и адаптеров
+Тип	Название	Назначение
+Входящий порт	CreateJobOfferUseCase	Интерфейс для создания отклика
+Входящий порт	GetJobOfferUseCase	Интерфейс для получения отклика
+Исходящий порт	JobOfferRepository	Интерфейс для хранения откликов
+Исходящий порт	NotificationService	Интерфейс для отправки уведомлений
+Входящий адаптер	JobOfferController (REST)	REST API для взаимодействия с пользователем
+Исходящий адаптер	InMemoryJobOfferRepository	Реализация хранилища в памяти
+Исходящий адаптер	ConsoleNotificationService	Заглушка сервиса уведомлений (консоль)
+Критерии выполнения
+Критерий	Выполнено	Комментарий
+Структура проекта (domain/application/infrastructure)	✅	
+Domain Layer (чистая бизнес-логика)	✅	
+Порты (входящие и исходящие интерфейсы)	✅	
+Адаптеры (минимум <span class="hljs-number">1</span> входящий + <span class="hljs-number">2</span> исходящих)	✅	InMemoryJobOfferRepository + ConsoleNotificationService
+DI-конфигурация (зависимости инжектятся)	✅	
+Юнит-тесты для JobOfferService с моками	✅	
+Документация (диаграмма, описание)	✅	
+Итого: <span class="hljs-number">7</span>/<span class="hljs-number">7</span> ✅
+
+Выводы
+Что получилось хорошо
+Удалось чётко разделить архитектуру на три независимых слоя: Domain, Application и Infrastructure. Доменная модель (JobOffer, User, Project) получилась чистой и не зависит от инфраструктуры. Порты позволили корректно отделить бизнес‑логику от адаптеров, что делает систему расширяемой и удобной для тестирования. Структура проекта полностью соответствует принципам Hexagonal Architecture.
+
+С какими трудностями столкнулись
+Возникли сложности с пониманием роли входящих и исходящих портов, особенно когда у интерфейса пока только одна реализация. Также потребовалось время, чтобы правильно распределить ответственность между доменными сущностями и сервисами приложения. DI‑контейнер потребовал аккуратной настройки зависимостей, чтобы не нарушить принцип инверсии зависимостей.
+
+Что узнали нового
+Познакомился с концепцией Hexagonal Architecture и принципами Ports &amp; Adapters. Усвоил важность Dependency Inversion и того, что доменный слой должен быть полностью независим от инфраструктуры. Понял, как порты позволяют легко подменять адаптеры (например, InMemory → PostgreSQL). Разобрался, как DI упрощает тестирование и расширение системы.
+
+Как можно улучшить
+Добавить реальную базу данных вместо InMemory‑репозитория. Реализовать полноценный NotificationService (email/Telegram). Добавить интеграционные тесты и покрыть JobOfferService юнит‑тестами. Ввести валидацию входящих данных и централизованную обработку ошибок. Реализовать остальные use cases (изменение этапа, заметки, напоминания).
+
+Ссылка на репозиторий
+[https://github.com/yourusername/joboffer-service]
+
+Дата сдачи: [<span class="hljs-number">20.03</span><span class="hljs-number">.2026</span>]
+
+Подпись студента: [Романюк М.А.]</code></pre>
+
+            
+            
+        </body>
+        </html>

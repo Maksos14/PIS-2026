@@ -1,0 +1,140 @@
+syntax = "proto3";
+
+package request;
+
+// Сервис для работы с откликами на вакансии
+service RequestService {
+    // Создание отклика (unary RPC)
+    rpc CreateOffer(CreateOfferRequest) returns (CreateOfferResponse);
+    
+    // Получение отклика по ID (unary RPC)
+    rpc GetOffer(GetOfferRequest) returns (Offer);
+    
+    // Смена этапа отбора (unary RPC)
+    rpc ChangeStage(ChangeStageRequest) returns (ChangeStageResponse);
+    
+    // Добавление заметки (unary RPC)
+    rpc AddNote(AddNoteRequest) returns (AddNoteResponse);
+    
+    // Отклонение отклика (unary RPC)
+    rpc RejectOffer(RejectOfferRequest) returns (RejectOfferResponse);
+    
+    // Получение списка активных откликов (unary RPC)
+    rpc ListActiveOffers(ListActiveOffersRequest) returns (ListActiveOffersResponse);
+    
+    // Поток обновлений статуса отклика (server-side streaming)
+    rpc StreamOfferUpdates(StreamOfferUpdatesRequest) returns (stream OfferUpdate);
+}
+
+// ========== Сообщения (Messages) ==========
+
+// Запрос на создание отклика
+message CreateOfferRequest {
+    string company = 1;      // название компании
+    string position = 2;     // должность
+    string user_id = 3;      // ID пользователя
+}
+
+// Ответ на создание отклика
+message CreateOfferResponse {
+    string offer_id = 1;     // ID созданного отклика
+    string status = 2;       // статус операции
+}
+
+// Запрос на получение отклика
+message GetOfferRequest {
+    string offer_id = 1;     // ID отклика
+}
+
+// Запрос на смену этапа
+message ChangeStageRequest {
+    string offer_id = 1;     // ID отклика
+    string new_stage = 2;    // новый этап (hr_screening, tech_interview и т.д.)
+    string note = 3;         // опциональная заметка
+}
+
+// Ответ на смену этапа
+message ChangeStageResponse {
+    string offer_id = 1;
+    string old_stage = 2;
+    string new_stage = 3;
+}
+
+// Запрос на добавление заметки
+message AddNoteRequest {
+    string offer_id = 1;
+    string content = 2;
+}
+
+// Ответ на добавление заметки
+message AddNoteResponse {
+    string offer_id = 1;
+    int32 notes_count = 2;
+}
+
+// Запрос на отклонение отклика
+message RejectOfferRequest {
+    string offer_id = 1;
+    string reason = 2;
+}
+
+// Ответ на отклонение
+message RejectOfferResponse {
+    string offer_id = 1;
+    string old_status = 2;
+    string new_status = 3;
+}
+
+// Запрос списка активных откликов
+message ListActiveOffersRequest {
+    string user_id = 1;
+    int32 limit = 2;         // ограничение (по умолчанию 20)
+    int32 offset = 3;        // смещение (по умолчанию 0)
+}
+
+// Ответ со списком активных откликов
+message ListActiveOffersResponse {
+    repeated OfferSummary items = 1;   // список откликов
+    int32 total = 2;                   // всего
+    int32 limit = 3;
+    int32 offset = 4;
+}
+
+// Запрос на поток обновлений
+message StreamOfferUpdatesRequest {
+    string user_id = 1;      // ID пользователя, чьи отклики отслеживаем
+}
+
+// Сообщение об обновлении отклика (для streaming)
+message OfferUpdate {
+    string offer_id = 1;
+    string event_type = 2;   // stage_changed, rejected, offer_received
+    string new_stage = 3;
+    string message = 4;
+    string timestamp = 5;
+}
+
+// ========== DTO (Data Transfer Objects) ==========
+
+// Полная информация об отклике
+message Offer {
+    string id = 1;
+    string company = 2;
+    string position = 3;
+    string user_id = 4;
+    string status = 5;               // active, rejected, offer_received
+    string current_stage = 6;        // resume_sent, hr_screening и т.д.
+    float progress_percentage = 7;   // прогресс в процентах
+    repeated string notes = 8;       // список заметок
+    string created_at = 9;
+    string updated_at = 10;
+}
+
+// Краткая информация об отклике (для списков)
+message OfferSummary {
+    string id = 1;
+    string company = 2;
+    string position = 3;
+    string current_stage = 4;
+    float progress_percentage = 5;
+}

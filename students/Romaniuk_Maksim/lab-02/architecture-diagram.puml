@@ -1,0 +1,182 @@
+@startuml JobOfferService_Hexagonal
+
+!define DOMAIN_COLOR #E8F5E9
+!define APPLICATION_COLOR #E3F2FD
+!define INFRASTRUCTURE_COLOR #FFF9C4
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam rectangle {
+    BackgroundColor<<domain>> #E8F5E9
+    BorderColor<<domain>> #4CAF50
+    BackgroundColor<<application>> #E3F2FD
+    BorderColor<<application>> #2196F3
+    BackgroundColor<<infrastructure>> #FFF9C4
+    BorderColor<<infrastructure>> #FFC107
+}
+
+title Гексагональная архитектура: JobOffer Service (Оффер где? — трекер откликов на вакансии)
+
+' ---------------- Infrastructure Layer ----------------
+package "Infrastructure Layer" <<infrastructure>> {
+
+    rectangle "REST API" as REST {
+        component "JobOfferController" as Controller
+        component "ReminderController" as ReminderCtrl
+    }
+
+    rectangle "Persistence" as Persistence {
+        component "PostgresJobOfferRepository" as PgRepo
+        component "PostgresNoteRepository" as NoteRepo
+    }
+
+    rectangle "Notifications" as Notifications {
+        component "EmailReminderService" as EmailSvc
+        component "TelegramReminderService" as TelegramSvc
+        component "PushReminderService" as PushSvc
+    }
+
+    rectangle "Configuration" as Config {
+        component "AppConfig" as ConfigBean
+    }
+}
+
+' ---------------- Application Layer ----------------
+package "Application Layer" <<application>> {
+
+    rectangle "Inbound Ports (Use Cases)" as InPorts {
+        interface "CreateJobOfferUseCase" as CreateUC
+        interface "UpdateOfferStageUseCase" as UpdateStageUC
+        interface "GetActiveOffersUseCase" as GetActiveUC
+        interface "AddNoteUseCase" as AddNoteUC
+        interface "ScheduleReminderUseCase" as ScheduleReminderUC
+    }
+
+    rectangle "Outbound Ports (SPI)" as OutPorts {
+        interface "JobOfferRepository" as RepoPort
+        interface "NoteRepository" as NoteRepoPort
+        interface "ReminderSender" as ReminderPort
+    }
+
+    rectangle "Services" as Service {
+        component "JobOfferService" as JobSvc
+        component "ReminderOrchestrator" as ReminderOrch
+    }
+}
+
+' ---------------- Domain Layer ----------------
+package "Domain Layer" <<domain>> {
+
+    rectangle "Aggregates" as Aggregates {
+        component "JobOffer" as JobOffer
+    }
+
+    rectangle "Entities" as Entities {
+        component "InterviewStage" as Stage
+        component "Note" as Note
+        component "Reminder" as Reminder
+    }
+
+    rectangle "Value Objects" as VOs {
+        component "CompanyName" as CompanyName
+        component "OfferStatus" as Status
+        component "StageType" as StageType
+        component "ReminderTime" as ReminderTime
+        component "NoteContent" as NoteContent
+    }
+
+    rectangle "Domain Events" as Events {
+        component "StageChangedEvent" as StageEvent
+        component "ReminderDueEvent" as ReminderEvent
+    }
+}
+
+' ---------------- Dependencies: Infrastructure → Application ----------------
+Controller --> CreateUC : <<uses>>
+Controller --> UpdateStageUC : <<uses>>
+Controller --> GetActiveUC : <<uses>>
+Controller --> AddNoteUC : <<uses>>
+ReminderCtrl --> ScheduleReminderUC : <<uses>>
+
+PgRepo ..|> RepoPort : <<implements>>
+NoteRepo ..|> NoteRepoPort : <<implements>>
+EmailSvc ..|> ReminderPort : <<implements>>
+TelegramSvc ..|> ReminderPort : <<implements>>
+PushSvc ..|> ReminderPort : <<implements>>
+
+ConfigBean --> Controller : <<creates>>
+ConfigBean --> ReminderCtrl : <<creates>>
+ConfigBean --> PgRepo : <<creates>>
+ConfigBean --> NoteRepo : <<creates>>
+ConfigBean --> EmailSvc : <<creates>>
+ConfigBean --> JobSvc : <<creates>>
+ConfigBean --> ReminderOrch : <<creates>>
+
+' ---------------- Application internal (Ports implementation) ----------------
+JobSvc ..|> CreateUC : <<implements>>
+JobSvc ..|> UpdateStageUC : <<implements>>
+JobSvc ..|> GetActiveUC : <<implements>>
+JobSvc ..|> AddNoteUC : <<implements>>
+
+ReminderOrch ..|> ScheduleReminderUC : <<implements>>
+
+' ---------------- Application dependencies on Outbound Ports ----------------
+JobSvc --> RepoPort : <<depends>>
+JobSvc --> NoteRepoPort : <<depends>>
+ReminderOrch --> RepoPort : <<depends>>
+ReminderOrch --> ReminderPort : <<depends>>
+
+' ---------------- Application → Domain ----------------
+JobSvc --> JobOffer : <<uses>>
+JobSvc --> Note : <<uses>>
+JobSvc --> Reminder : <<uses>>
+ReminderOrch --> Reminder : <<uses>>
+ReminderOrch --> StageEvent : <<publishes>>
+
+' ---------------- Domain relations ----------------
+JobOffer *-- Stage : has (ordered)
+JobOffer *-- Note : has
+JobOffer *-- Reminder : has
+JobOffer --> CompanyName : value object
+JobOffer --> OfferStatus : value object
+Stage --> StageType : value object
+Reminder --> ReminderTime : value object
+Note --> NoteContent : value object
+
+' ---------------- Domain Business Rules Note ----------------
+note right of JobOffer
+  <b>Агрегат: JobOffer (Вакансия/Отклик)</b>
+  ----  
+  • id: UUID  
+  • company: CompanyName  
+  • position: string  
+  • status: OfferStatus (ACTIVE, REJECTED, OFFER_RECEIVED)  
+  • stages: List<InterviewStage>  
+  • notes: List<Note>  
+  • reminders: List<Reminder>  
+  ----  
+  <b>Бизнес-правила:</b>  
+  • Нельзя перейти на предыдущий этап  
+  • При изменении этапа → генерируется StageChangedEvent  
+  • Нельзя добавить заметку без текста  
+  • Напоминание можно запланировать только на будущее  
+  • Если статус REJECTED → все напоминания отменяются  
+end note
+
+' ---------------- Legend ----------------
+legend right
+  |<#E8F5E9>| <b>Domain Layer</b> |
+  | Чистая бизнес-логика |
+  | Агрегаты, сущности, Value Objects |
+  | Не знает ни про REST, ни про БД |
+  |<#E3F2FD>| <b>Application Layer</b> |
+  | Use cases (входящие порты) |
+  | SPI (исходящие порты) |
+  | Оркестрация сервисов |
+  |<#FFF9C4>| <b>Infrastructure Layer</b> |
+  | REST Controllers |
+  | Репозитории (PostgreSQL) |
+  | Адаптеры уведомлений (Email/Telegram/Push) |
+endlegend
+
+@enduml

@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package group;
+
+// Сервис для работы с группами/проектами
+service GroupService {
+    // Создание группы
+    rpc CreateGroup(CreateGroupRequest) returns (CreateGroupResponse);
+    
+    // Получение группы по ID
+    rpc GetGroup(GetGroupRequest) returns (Group);
+    
+    // Добавление участника в группу
+    rpc AddMember(AddMemberRequest) returns (AddMemberResponse);
+    
+    // Список групп пользователя
+    rpc ListUserGroups(ListUserGroupsRequest) returns (ListUserGroupsResponse);
+}
+
+// Запрос на создание группы
+message CreateGroupRequest {
+    string name = 1;
+    string leader_id = 2;
+}
+
+// Ответ на создание группы
+message CreateGroupResponse {
+    string group_id = 1;
+    string status = 2;
+}
+
+// Запрос на получение группы
+message GetGroupRequest {
+    string group_id = 1;
+}
+
+// Запрос на добавление участника
+message AddMemberRequest {
+    string group_id = 1;
+    string member_id = 2;
+}
+
+// Ответ на добавление участника
+message AddMemberResponse {
+    string group_id = 1;
+    int32 members_count = 2;
+}
+
+// Запрос списка групп пользователя
+message ListUserGroupsRequest {
+    string user_id = 1;
+}
+
+// Ответ со списком групп
+message ListUserGroupsResponse {
+    repeated GroupSummary groups = 1;
+}
+
+// Полная информация о группе
+message Group {
+    string id = 1;
+    string name = 2;
+    string leader_id = 3;
+    string status = 4;               // forming, ready, deployed
+    repeated string member_ids = 5;
+    string created_at = 6;
+}
+
+// Краткая информация о группе
+message GroupSummary {
+    string id = 1;
+    string name = 2;
+    string status = 3;
+    int32 members_count = 4;
+}
